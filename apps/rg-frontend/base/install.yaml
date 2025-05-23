@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipegenerator-frontend-deployment
+  namespace: recipe-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipegenerator-frontend
+  template:
+    metadata:
+      labels:
+        app: recipegenerator-frontend
+    spec:
+      containers:
+      - image: docker.io/ili16/recipe-generator-frontend:eaece04aef6159fa173486cba8ede4d31a1ad909
+        name: recipegenerator-frontend
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1
+            memory: 250Mi
+          requests:
+            cpu: 100m
+            memory: 250Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recipegenerator-frontend-service
+  namespace: recipe-generator
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: recipegenerator-frontend
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: recipe-generator
+  name: recipe-generator
